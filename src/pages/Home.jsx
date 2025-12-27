@@ -1,6 +1,6 @@
 import React from "react";
 import Typewriter from "typewriter-effect";
-import FrabinaPfp from "../images/FrabinaPfp.png";
+import FrabinaPfp from "../images/FrabinaPfp.jpg";
 import "../css/Home.css";
 
 
