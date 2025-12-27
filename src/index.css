@@ -1,22 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
 
 :root{
-  --bg-1: #7e7f83;
-  --bg-2: #ffffff;
-  --bg-3: #78767a;
+--bg-1: #d2dbeb;
+--bg-2: #b3c4d3;
+--bg-3: #01162b;
 
-  --accent-purple: #9b87d4;
-  --accent-light: #c7b8ea;
+  --accent-purple: #000000;
+  --accent-light: #3b3449;
   --glass: rgba(255,255,255,0.75);
   --glass-border: rgba(155, 135, 212, 0.2);
-  --text: #2d2838;
+  --text: #1f1f1f;
   --text-secondary: #5a5166;
 }
 
 
 
 .background {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
   position: fixed;
   inset: 0;
   z-index: -1;
@@ -47,7 +46,7 @@
 html, body, #root { height: 100%; margin: 0; padding: 0; }
 
 body{
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Tan Ashford', 'Playfair Display', 'Times New Roman', serif;
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

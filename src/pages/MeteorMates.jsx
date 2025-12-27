@@ -18,7 +18,7 @@ export default function MeteorMate() {
     <div className="project-page container">
 
       {/* Project Title */}
-      <h1>ACM Development - MeteorMate</h1>
+      <h1>ACM Development - MeteorMate (Work In Progress) </h1>
 
       {/* Project Description */}
       <p className="project-description">
