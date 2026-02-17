@@ -80,9 +80,9 @@ export default function Home() {
     gap: '8px'
   }}
 >
-  <a href="https://cs.utdring.com/#https://frabina.vercel.app/?nav=prev">←</a>
+  <a href="https://cs.utdring.com/#https://frabina.com/?nav=prev">←</a>
 
-  <a href="https://cs.utdring.com/#https://frabina.vercel.app/" target="_blank">
+  <a href="https://cs.utdring.com/#https://frabina.com/" target="_blank">
     <img
       src="https://cs.utdring.com/icon.white.svg"
       alt="CS Webring"
@@ -90,7 +90,7 @@ export default function Home() {
     />
   </a>
 
-  <a href="https://cs.utdring.com/#https://frabina.vercel.app/?nav=next">→</a>
+  <a href="https://cs.utdring.com/#https://frabina.com/?nav=next">→</a>
 </div>
 
 
