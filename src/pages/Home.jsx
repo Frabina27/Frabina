@@ -72,6 +72,28 @@ export default function Home() {
           <p>Figma, Canva, Adobe</p>
         </div>
       </section>
+
+      <div   style={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '8px'
+  }}
+>
+  <a href="https://cs.utdring.com/#https://frabina.vercel.app/?nav=prev">←</a>
+
+  <a href="https://cs.utdring.com/#https://frabina.vercel.app/" target="_blank">
+    <img
+      src="https://cs.utdring.com/icon.white.svg"
+      alt="CS Webring"
+      style={{ width: '24px', height: 'auto', opacity: 0.8 }}
+    />
+  </a>
+
+  <a href="https://cs.utdring.com/#https://frabina.vercel.app/?nav=next">→</a>
+</div>
+
+
     </div>
   );
 }
