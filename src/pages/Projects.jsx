@@ -49,7 +49,7 @@ export default function Projects() {
   return (
     <div className="designs-page">
       <h1>Projects</h1>
-      <p className="small">A showcase of my technical work</p>
+      <p className="small">A showcase of my technical work!</p>
       <div className="grid">
         {items.map((it, i) => (
           <ProjectCard key={i} {...it} />

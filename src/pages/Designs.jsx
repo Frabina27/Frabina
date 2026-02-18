@@ -49,7 +49,7 @@ export default function Designs() {
   return (
     <div className="designs-page">
       <h1>Designs</h1>
-      <p className="small">A showcase of my creative work</p>
+      <p className="small">Crafting digital experiences one design at a time!</p>
 
       <div className="grid">
         {items.map((it, i) => (

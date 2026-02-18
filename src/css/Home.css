@@ -80,7 +80,6 @@ body {
   z-index: -1;
 }
 
-/* sparkle on hover */
 .btn:hover::after {
   opacity: 1;
   animation: sparkle-float 2.5s linear infinite;
@@ -96,7 +95,6 @@ body {
   }
 }
 
-/* === HERO SECTION === */
 .hero-section {
   display: flex;
   align-items: center;
@@ -145,7 +143,6 @@ body {
   margin-bottom: 24px;
 }
 
-/* === FLOATING IMAGE === */
 .hero-right {
   flex: 1;
   display: flex;
@@ -191,7 +188,6 @@ body {
   100% { transform: translateY(0); }
 }
 
-/* === SKILLS SECTION === */
 .skills-section {
   display: flex;
   justify-content: space-between;
@@ -227,7 +223,6 @@ body {
   font-size: 1rem;
 }
 
-/* === RESPONSIVE === */
 @media (max-width: 900px) {
   .hero-section {
     flex-direction: column;
@@ -248,4 +243,6 @@ body {
     flex-direction: column;
     gap: 20px;
   }
+
+  
 }
