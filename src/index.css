@@ -150,26 +150,28 @@ body{
 }
 
 
+/* --- NAVBAR --- */
 .navbar {
   position: fixed;
   top: calc(12px + env(safe-area-inset-top));
   left: 12px;
   right: 12px;
-
   margin: 0 auto;
   max-width: 900px;
   height: 60px;
-
   border-radius: 999px;
   padding: 0 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   background: rgba(255, 255, 255, 0.9);
 
   z-index: 1000;
-  display: flex;
-  align-items: center;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 .navbar:hover {
@@ -187,19 +189,23 @@ body{
 }
 
 .brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-weight: 700;
   font-size: 18px;
   letter-spacing: 0.5px;
-  color: var(--text);
   background: linear-gradient(135deg, var(--accent-purple), var(--accent-light));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
+
 .nav-links {
   display: flex;
   gap: 24px;
+  flex-wrap: wrap; 
 }
 
 .nav-link {
@@ -230,6 +236,35 @@ body{
 .nav-link:hover::after {
   width: 100%;
 }
+
+/* --- RESPONSIVE FOR MOBILE --- */
+@media (max-width: 600px) {
+  .nav-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    height: auto;
+    padding: 8px 12px;
+  }
+
+  .brand {
+    font-size: 16px;
+  }
+
+  .heart {
+    font-size: 16px;
+  }
+
+  .nav-links {
+    width: 100%;
+    gap: 12px;
+  }
+
+  .nav-link {
+    font-size: 14px;
+  }
+}
+
 
 /* Project grid */
 .grid {
@@ -273,6 +308,71 @@ p {
   .nav-link {
     font-size: 14px;
   }
+}
+
+/* === QUOTE BAR === */
+.quote-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
+  padding: 20px 28px;
+  margin: 20px auto;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  min-height: 90px;
+  width: 1000px;
+  max-width: 95%;
+  box-sizing: border-box; 
+}
+
+
+.quote-content {
+  flex: 1;
+  text-align: center;
+  transition: opacity 0.25s ease;
+}
+
+.quote-fade-in {
+  opacity: 1;
+}
+
+.quote-fade-out {
+  opacity: 0;
+}
+
+.quote-text {
+  font-size: 15px;
+  color: white;
+  margin: 0 0 6px 0;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.quote-author {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 0.5px;
+}
+
+.quote-arrow {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  opacity: 0.6;
+  padding: 0 8px;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.quote-arrow:hover {
+  opacity: 1;
+  transform: scale(1.2);
 }
 
 

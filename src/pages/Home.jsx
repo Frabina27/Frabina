@@ -80,35 +80,76 @@ export default function Home() {
     gap: '8px'
   }}
 >
-{/* webring thing for utd acm */}
-<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-  <a
-    href="https://cs.utdring.com/#https://frabina.com/?nav=prev"
-    style={{ color: 'white', textDecoration: 'none' }}
-  >
-    ←
-  </a>
 
-  <a
-    href="https://cs.utdring.com/#https://frabina.com/"
-    target="_blank"
-    style={{ color: 'white', textDecoration: 'none' }}
-  >
-    <img
-      src="https://cs.utdring.com/icon.white.svg"
-      alt="CS Webring"
-      style={{ width: '24px', height: 'auto', opacity: 0.8 }}
-    />
-  </a>
+<div
+  style={{
+    display: 'flex',
+    flexDirection: 'column', // stack vertically
+    alignItems: 'center',    // center horizontally
+    gap: '16px',             // space between quote carousel and webring
+    marginTop: '20px',
+    marginBottom: '20px'
+  }}
+>
+  {/* === QUOTE CAROUSEL === */}
+  {(() => {
+    const quotes = [
+      { text: "Be The Change You Wish To See In The World", author: "— Mahatma Gandhi" },
+      { text: "The details are not the details. They make the design.", author: "— Charles Eames" },
+      { text: "Everything is designed. Few things are designed well.", author: "— Brian Reed" },
+    ];
+    const [quoteIndex, setQuoteIndex] = React.useState(0);
+    const [fading, setFading] = React.useState(false);
 
-  <a
-    href="https://cs.utdring.com/#https://frabina.com/?nav=next"
-    style={{ color: 'white', textDecoration: 'none' }}
-  >
-    →
-  </a>
+    const changeQuote = (dir) => {
+      setFading(true);
+      setTimeout(() => {
+        setQuoteIndex((prev) => (prev + dir + quotes.length) % quotes.length);
+        setFading(false);
+      }, 250);
+    };
+
+    return (
+      <div className="quote-bar container">
+        <button className="quote-arrow" onClick={() => changeQuote(-1)}>‹</button>
+        <div className={`quote-content ${fading ? "quote-fade-out" : "quote-fade-in"}`}>
+          <p className="quote-text">"{quotes[quoteIndex].text}"</p>
+          <span className="quote-author">{quotes[quoteIndex].author}</span>
+        </div>
+        <button className="quote-arrow" onClick={() => changeQuote(1)}>›</button>
+      </div>
+    );
+  })()}
+
+  {/* === WEBRING BELOW QUOTE CAROUSEL === */}
+  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+    <a
+      href="https://cs.utdring.com/#https://frabina.com/?nav=prev"
+      style={{ color: 'white', textDecoration: 'none' }}
+    >
+      ←
+    </a>
+
+    <a
+      href="https://cs.utdring.com/#https://frabina.com/"
+      target="_blank"
+      style={{ color: 'white', textDecoration: 'none' }}
+    >
+      <img
+        src="https://cs.utdring.com/icon.white.svg"
+        alt="CS Webring"
+        style={{ width: '24px', height: 'auto', opacity: 0.8 }}
+      />
+    </a>
+
+    <a
+      href="https://cs.utdring.com/#https://frabina.com/?nav=next"
+      style={{ color: 'white', textDecoration: 'none' }}
+    >
+      →
+    </a>
+  </div>
 </div>
-
 </div>
 
 
