@@ -81,9 +81,19 @@ export default function Home() {
   }}
 >
 {/* webring thing for utd acm */}
-  <a href="https://cs.utdring.com/#https://frabina.com/?nav=prev">←</a>
+<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+  <a
+    href="https://cs.utdring.com/#https://frabina.com/?nav=prev"
+    style={{ color: 'white', textDecoration: 'none' }}
+  >
+    ←
+  </a>
 
-  <a href="https://cs.utdring.com/#https://frabina.com/" target="_blank">
+  <a
+    href="https://cs.utdring.com/#https://frabina.com/"
+    target="_blank"
+    style={{ color: 'white', textDecoration: 'none' }}
+  >
     <img
       src="https://cs.utdring.com/icon.white.svg"
       alt="CS Webring"
@@ -91,7 +101,14 @@ export default function Home() {
     />
   </a>
 
-  <a href="https://cs.utdring.com/#https://frabina.com/?nav=next">→</a>
+  <a
+    href="https://cs.utdring.com/#https://frabina.com/?nav=next"
+    style={{ color: 'white', textDecoration: 'none' }}
+  >
+    →
+  </a>
+</div>
+
 </div>
 
 
