@@ -3,11 +3,11 @@
 :root{
 --bg-1: #d2dbeb;
 --bg-2: #e8e5f3;
---bg-3: #c06ad8;
+--bg-3: #421d6d;
 
-  --accent-purple: #000000;
-  --accent-light: #3b3449;
-  --glass: rgba(255,255,255,0.75);
+  --accent-purple: #935fcf;
+  --accent-light: #5f5463;
+  --glass: rgba(255, 255, 255, 0.281);
   --glass-border: rgba(155, 135, 212, 0.2);
   --text: #1f1f1f;
   --text-secondary: #000000;
@@ -107,7 +107,7 @@ body{
   border-color: rgba(155, 135, 212, 0.3);
 }
 
-/* Enhanced Buttons — cleaned hover animation */
+/* color here is for initial button color */
 .btn {
   background: rgba(255, 255, 255, 0.85);
   border: 1px solid var(--glass-border);
@@ -124,7 +124,7 @@ body{
 
 .btn:hover {
   background: linear-gradient(135deg, var(--accent-purple), var(--accent-light));
-  color: white;
+  color: white; /* text */
   border-color: var(--accent-purple);
   box-shadow: 0 6px 20px rgba(155, 135, 212, 0.25);
   transform: translateY(-2px);

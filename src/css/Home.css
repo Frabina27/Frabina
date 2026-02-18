@@ -21,7 +21,7 @@ body {
   overflow: hidden; /* hide sparkles that go outside the button */
 }
 
-/* Add sparkles using pseudo-elements */
+/* Add sparkles!! */
 .btn::before,
 .btn::after {
   content: "";
@@ -46,7 +46,6 @@ body {
   transition: left 0.6s ease-in-out;
 }
 
-/* Optional twinkle effect */
 @keyframes sparkle-twinkle {
   0%, 100% { opacity: 0.8; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.1); }
@@ -56,14 +55,12 @@ body {
   animation: sparkle-twinkle 1.2s ease-in-out infinite;
 }
 
-/* ✨ Floating sparkles around the button */
 .btn {
   position: relative;
   overflow: hidden;
   z-index: 0;
 }
 
-/* Container for sparkles */
 .btn::after {
   content: "";
   position: absolute;

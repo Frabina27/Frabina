@@ -7,7 +7,7 @@ export default function Resume() {
     <div className="resume-container">
       <div className="resume-header">
         <h1>Resume</h1>
-        <p className="small">My professional journey</p>
+        <p className="small">A timeline of my learning and experience! </p>
       </div>
 <div className="section-divider">
         <h2>Education</h2>

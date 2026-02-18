@@ -60,15 +60,15 @@ export default function Home() {
       {/* === SKILLS SECTION === */}
       <section className="skills-section container">
         <div className="skill-card">
-          <h3>Front-End</h3>
-          <p>HTML, CSS, JavaScript</p>
+          <h3>Interests</h3>
+          <p>Journaling, Gaming, Reading</p>
         </div>
         <div className="skill-card">
           <h3>Languages</h3>
-          <p>Java, Python</p>
+          <p>Java, Python, HTML, CSS, JavaScript, LUA</p>
         </div>
         <div className="skill-card">
-          <h3>Design</h3>
+          <h3>Design Tools</h3>
           <p>Figma, Canva, Adobe</p>
         </div>
       </section>

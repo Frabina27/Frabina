@@ -88,8 +88,9 @@
 .timeline-item::before {
   content: '';
   position: absolute;
-  left: -47px;
-  top: 8px;
+  left: -49px;
+  top: 50%;
+  transform: translateY(-50%);
   width: 16px;
   height: 16px;
   border-radius: 50%;
@@ -98,6 +99,7 @@
   box-shadow: 0 0 0 3px rgba(155, 135, 212, 0.2);
   z-index: 1;
 }
+
 
 /* === TIMELINE CARDS === */
 .timeline-card {
