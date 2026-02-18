@@ -95,8 +95,8 @@ export default function Home() {
   {(() => {
     const quotes = [
       { text: "Be The Change You Wish To See In The World", author: "— Mahatma Gandhi" },
-      { text: "The details are not the details. They make the design.", author: "— Charles Eames" },
-      { text: "Everything is designed. Few things are designed well.", author: "— Brian Reed" },
+      { text: "I am going to make everything around me beautiful - that will be my life.", author: "— Elsie de Wolfe" },
+      { text: "The future belongs to those who believe in the beauty of their dreams.", author: "— Eleanor Roosevelt" },
     ];
     const [quoteIndex, setQuoteIndex] = React.useState(0);
     const [fading, setFading] = React.useState(false);
@@ -148,8 +148,8 @@ export default function Home() {
     >
       →
     </a>
+    </div>
   </div>
-</div>
 </div>
 
 
