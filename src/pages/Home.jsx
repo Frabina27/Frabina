@@ -80,6 +80,7 @@ export default function Home() {
     gap: '8px'
   }}
 >
+{/* webring thing for utd acm */}
   <a href="https://cs.utdring.com/#https://frabina.com/?nav=prev">←</a>
 
   <a href="https://cs.utdring.com/#https://frabina.com/" target="_blank">

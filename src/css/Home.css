@@ -209,7 +209,7 @@ body {
 
 .skill-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 12px 40px rgba(168,216,255,0.25);
+  box-shadow: 0 12px 40px rgba(255, 255, 255, 0.25); /*highlight shadow on hover*/
 }
 
 .skill-card h3 {
@@ -219,7 +219,7 @@ body {
 }
 
 .skill-card p {
-  color: rgba(0, 0, 0, 0.85); 
+  color: var(--text); /*text color in card*/
   font-size: 1rem;
 }
 

@@ -24,7 +24,7 @@ export default function ProjectCard({ id, title, subtitle, tags, image }) {
           overflow: "hidden",
           background: image
             ? "none"
-            : "linear-gradient(135deg, rgba(168,216,255,0.08), rgba(10,30,60,0.04))",
+            : "linear-gradient(135deg, rgba(255, 168, 168, 0.08), rgba(10,30,60,0.04))",
         }}
       >
         {image && (

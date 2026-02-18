@@ -9,7 +9,7 @@
 }
 
 .designs-page .small {
-  color: rgba(0, 0, 0, 0.7); 
+  color: rgba(255, 255, 255); 
   margin-bottom: 32px;
 }
 
@@ -100,14 +100,7 @@
   margin: 12px 0; 
   padding: 16px;
   border-radius: 8px;
-  background: rgba(255,255,255,0.05);
-}
-
-.section-divider {
-  border: none;
-  height: 1px;
-  background: rgba(0, 0, 0, 0); /* I stopped liking it.. may add it back later.*/
-  margin: 32px 0;
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .process-steps {

@@ -1,15 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
 
 :root{
---bg-1: #d2dbeb;
---bg-2: #e8e5f3;
---bg-3: rgba(218, 191, 233, 0.733);
+--bg-1: #617891;
+--bg-2: #617891;
+--bg-3: #617891;
 
-  --accent-purple: #935fcf;
-  --accent-light: #5f5463;
+  --accent-purple: #11064d;
+  --experimenting-blue: #25344F;
+  --accent-light: #272727;
   --glass: rgba(255, 255, 255, 0.726);
   --glass-border: rgba(155, 135, 212, 0.2);
-  --text: #1f1f1f;
+  --text: #ffffff;
   --text-secondary: #000000;
 }
 
@@ -66,7 +67,6 @@ body{
   z-index: 1;
 }
 
-/* Enhanced Cards with better depth */
 .card {
   background: var(--glass);
   border: 1px solid var(--glass-border);
@@ -82,7 +82,6 @@ body{
   overflow: hidden;
 }
 
-/* Subtle gradient accent on cards */
 .card::before {
   content: '';
   position: absolute;
@@ -90,7 +89,7 @@ body{
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--accent-purple), var(--accent-light));
+  background: linear-gradient(90deg, var(--text), var(--accent-light));
   opacity: 0;
   transition: opacity 0.4s ease;
 }
@@ -109,7 +108,7 @@ body{
 
 /* color here is for initial button color */
 .btn {
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--experimenting-blue);
   border: 1px solid var(--glass-border);
   color: var(--text);
   padding: 12px 24px;
@@ -123,9 +122,9 @@ body{
 }
 
 .btn:hover {
-  background: linear-gradient(135deg, var(--accent-purple), var(--accent-light));
+  background: linear-gradient(135deg, var(--experimenting-blue), var(--text));
   color: white; /* text */
-  border-color: var(--accent-purple);
+  border-color: var(--text-secondary);
   box-shadow: 0 6px 20px rgba(155, 135, 212, 0.25);
   transform: translateY(-2px);
 }
@@ -134,7 +133,7 @@ body{
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, var(--accent-purple), var(--accent-light));
+  background: linear-gradient(135deg, var(--text), var(--text));
   opacity: 0;
   transition: opacity 0.4s ease;
   z-index: 0;
