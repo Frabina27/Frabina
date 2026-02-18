@@ -159,7 +159,7 @@
   font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 4px;
-  color: var(--text-secondary);
+  color: var(--text-secondary); /*this is the text for resume header in catagories (like utd)*/
 }
 
 .timeline-subtitle {
