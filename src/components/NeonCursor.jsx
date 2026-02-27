@@ -40,7 +40,7 @@ export default function NeonCursor() {
     position: "fixed",
     inset: 0,
     pointerEvents: "none",
-    zIndex: 200, 
+    zIndex: 2000, 
   };
 
   const mainBase = {
