@@ -340,7 +340,9 @@ p {
   transform: scale(1.2);
 }
 
-
+html, body {
+  cursor: none;
+}
 
 @media (hover: none) {
   .navbar:hover {

@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import Navbar from "./components/Navbar";
+import NeonCursor from "./components/NeonCursor";
 
 import Home from "./pages/Home";
 import Projects from "./pages/Projects";
@@ -65,6 +66,7 @@ function AnimatedRoutes() {
 export default function App() {
   return (
     <Router>
+      <NeonCursor />
       {}
       <div className="background"></div>
 
