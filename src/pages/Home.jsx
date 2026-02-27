@@ -84,9 +84,9 @@ export default function Home() {
 <div
   style={{
     display: 'flex',
-    flexDirection: 'column', // stack vertically
-    alignItems: 'center',    // center horizontally
-    gap: '16px',             // space between quote carousel and webring
+    flexDirection: 'column', 
+    alignItems: 'center', 
+    gap: '16px',             
     marginTop: '20px',
     marginBottom: '20px'
   }}
