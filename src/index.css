@@ -5,7 +5,6 @@
 --bg-2: #617891;
 --bg-3: #617891;
 
-  --accent-purple: #11064d;
   --experimenting-blue: #25344F;
   --accent-light: #272727;
   --glass: rgba(255, 255, 255, 0.726);
@@ -13,8 +12,6 @@
   --text: #ffffff;
   --text-secondary: #000000;
 }
-
-
 
 .background {
   position: fixed;
@@ -179,7 +176,7 @@ body{
   font-size: 18px;
   letter-spacing: 0.5px;
   color: var(--text);
-  background: linear-gradient(135deg, var(--ex), var(--accent-light));
+  background: linear-gradient(135deg, var(--experimenting-blue), var(--accent-light));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -215,12 +212,12 @@ body{
   bottom: -6px;
   height: 2px;
   width: 0%;
-  background: linear-gradient(90deg, var(--accent-purple), var(--accent-light));
+  background: linear-gradient(90deg, var(--text), var(--accent-light));
   transition: width 0.3s ease;
 }
 
 .nav-link:hover {
-  color: var(--accent-purple);
+  color: var(--text);
 }
 
 .nav-link:hover::after {
