@@ -77,21 +77,9 @@ body{
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 
     0 4px 20px rgba(155, 135, 212, 0.08),
-    0 1px 3px rgba(45, 40, 56, 0.05);
+    0 1px 3px rgba(197, 14, 14, 0.05);
   position: relative;
   overflow: hidden;
-}
-
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--text), var(--accent-light));
-  opacity: 0;
-  transition: opacity 0.4s ease;
 }
 
 .card-hover:hover::before {
@@ -191,11 +179,19 @@ body{
   font-size: 18px;
   letter-spacing: 0.5px;
   color: var(--text);
-  background: linear-gradient(135deg, var(--accent-purple), var(--accent-light));
+  background: linear-gradient(135deg, var(--ex), var(--accent-light));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
+  color: inherit;
+  text-decoration: none;}
+
+    .brand:hover,
+  .brand:focus,
+  .brand:active {
+    text-decoration: none;
+    color: inherit;
+  }
 
 .nav-links {
   display: flex;
