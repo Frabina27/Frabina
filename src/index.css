@@ -138,30 +138,31 @@ body{
 .navbar {
   position: fixed;
   top: calc(12px + env(safe-area-inset-top));
-  left: 12px;
-  right: 12px;
 
-  margin: 0 auto;
-  max-width: 900px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: min(1100px, calc(100% - 24px));
   height: 60px;
 
   border-radius: 999px;
-  padding: 0 16px;
+  padding: 0 18px;
 
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.28);
 
-  z-index: 1000;
   display: flex;
   align-items: center;
+  z-index: 1000;
 }
 
 .navbar:hover {
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 
-    0 12px 40px rgba(155, 135, 212, 0.18),
-    0 4px 12px rgba(45, 40, 56, 0.08);
+  background: rgba(255, 255, 255, 0.78);
+  border-color: rgba(255, 255, 255, 0.40);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.10);
 }
 
 .nav-inner {
@@ -170,6 +171,8 @@ body{
   justify-content: space-between;
   width: 100%;
 }
+
+
 
 .brand {
   font-weight: 700;

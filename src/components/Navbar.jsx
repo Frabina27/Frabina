@@ -5,13 +5,13 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="nav-inner">
-        {/* Brand with heart */}
-        <div className="brand">
-<Link to="/" className="brand">
-  <span className="heart">♡</span> Frabina
-</Link>        </div>
+        {/* Brand */}
+        <Link to="/" className="brand">
+          <span className="heart">♡</span>
+          <span className="brand-text">Frabina</span>
+        </Link>
 
-        {/* Right-aligned nav links */}
+        {/* Links */}
         <div className="nav-links">
           <Link className="nav-link" to="/projects">Projects</Link>
           <Link className="nav-link" to="/designs">Designs</Link>
