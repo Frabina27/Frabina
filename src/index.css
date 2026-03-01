@@ -118,7 +118,7 @@ body{
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, var(--text), var(--text));
+  background: linear-gradient(135deg, var(--text-secondary), var(--text));
   opacity: 0;
   transition: opacity 0.4s ease;
   z-index: 0;
@@ -212,12 +212,12 @@ body{
   bottom: -6px;
   height: 2px;
   width: 0%;
-  background: linear-gradient(90deg, var(--text), var(--accent-light));
+  background: linear-gradient(90deg, var(--experimenting-blue), var(--accent-light));
   transition: width 0.3s ease;
 }
 
 .nav-link:hover {
-  color: var(--text);
+  color: var(--experimenting-blue);
 }
 
 .nav-link:hover::after {
