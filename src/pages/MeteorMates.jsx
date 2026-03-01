@@ -34,7 +34,7 @@ export default function MeteorMate() {
       />
 
       {/* Background */}
-      <section className="project-section">
+      <section className="info-card">
         <h2>Background</h2>
         <p>
           Students often struggle to find roommates with compatible lifestyles and preferences. 

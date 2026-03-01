@@ -51,7 +51,7 @@ export default function Eunoia() {
       />
 
       {/* Project Details */}
-      <section className="project-section">
+      <section className="info-card">
         <h2>Background</h2>
         <p>
           Eunoia was designed during a 24-hour design-a-thon to combat remote worker burnout by prioritizing breaks, hydration, walks, and more! 
@@ -59,7 +59,7 @@ export default function Eunoia() {
         </p>
       </section>
 
-      <section className="project-section">
+      <section className="info-card">
         <h2>Primary Research</h2>
         <p>
           We researched workplace wellness trends and human-centered design practices, focusing on ways to make wellness fun and engaging. 
@@ -67,7 +67,7 @@ export default function Eunoia() {
         </p>
       </section>
 
-      <section className="project-section">
+      <section className="info-card">
         <h2>Competitive Analysis</h2>
         <p>
           We analyzed existing wellness apps and gamified productivity tools, noting that none of them provided the features we were looking for in one location.
@@ -156,7 +156,7 @@ export default function Eunoia() {
       </section>
 
       {/* Inspiration & Accomplishments */}
-      <section className="project-section">
+      <section className="info-card">
         <h2>Inspiration & Accomplishments</h2>
         <p>
           Inspired by CBRE’s human-centered design approach, we built a gamified wellness platform that makes work fun. 
@@ -165,7 +165,7 @@ export default function Eunoia() {
       </section>
 
     {/* Summary / Conclusion */}
-    <section className="project-section">
+    <section className="info-card">
       <h2>Conclusion</h2>
       <p>
         Eunoia demonstrates how gamification can transform wellness into an engaging and motivating experience. 

@@ -24,7 +24,6 @@
   border: 1px solid rgba(255,255,255,0.15);
   border-radius: 16px;
   padding: 24px;
-  text-emphasis-color: #000000;
   transition: all 0.3s ease;
   box-shadow: 0 8px 32px rgba(0,0,0,0.1);
   display: flex;
@@ -38,6 +37,12 @@
   border-radius: 12px;
   margin-bottom: 12px;
   
+}
+
+.project-description {
+  color: #fff; /* changes color of text in proj description */
+  line-height: 1.6;
+  margin-bottom: 18px;
 }
 
 .card-hover:hover {
@@ -100,7 +105,7 @@
   margin: 12px 0; 
   padding: 16px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(236, 233, 233, 0.15);
 }
 
 .process-steps {
