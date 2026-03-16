@@ -44,7 +44,7 @@ export async function getAuthorizationUrl() {
   return authUrl.toString();
 }
 
-// Exchange code for access token
+// Exchange code for access token and refresh token
 export async function getAccessToken(code) {
   const codeVerifier = sessionStorage.getItem('spotify_code_verifier');
 
@@ -67,7 +67,36 @@ export async function getAccessToken(code) {
   }
 
   const data = await response.json();
-  return data.access_token;
+  return {
+    accessToken: data.access_token,
+    refreshToken: data.refresh_token,
+    expiresIn: data.expires_in,
+  };
+}
+
+// Refresh access token using refresh token
+export async function refreshAccessToken(refreshToken) {
+  const response = await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      client_id: CLIENT_ID,
+      grant_type: 'refresh_token',
+      refresh_token: refreshToken,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to refresh token');
+  }
+
+  const data = await response.json();
+  return {
+    accessToken: data.access_token,
+    expiresIn: data.expires_in,
+  };
 }
 
 // Get currently playing track
