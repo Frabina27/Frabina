@@ -6,7 +6,8 @@ const STICKERS = [
   { id: 2, src: "/calcifer.png", alt: "Calcifer", x: 0.70, y: 0.70, size: 250, floatDelay: 1.2 },
   { id: 3, src: "/ponyo.png", alt: "Ponyo", x: 0, y: 0, size: 250, floatDelay: 0.6 },
   { id: 4, src: "/haku.png", alt: "Haku", x: 0.75, y: 0.10, size: 250, floatDelay: 1.5 },
-  { id: 5, src: "/soots.png", alt: "soots", x: 0.83, y: 0.40, size: 300, floatDelay: 1.8 },
+  { id: 5, src: "/soots.png", alt: "soots", x: 0.05, y: 0.30, size: 300, floatDelay: 1.8 },
+  { id: 6, src: "/catbus.png", alt: "Catbus", x: 0.85, y: 0.40, size: 250, floatDelay: 0.9 },
 ];
 
 function DraggableSticker({ sticker }) {
