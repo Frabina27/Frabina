@@ -14,6 +14,15 @@ export default function NeonCursor() {
     const onDown = () => setIsClicking(true);
     const onUp = () => setIsClicking(false);
 
+    const onLeave = () => setPos({ x: -100, y: -100 });
+  const onEnter = (e) => setPos({ x: e.clientX, y: e.clientY });
+
+  document.addEventListener("mouseleave", onLeave);
+  document.addEventListener("mouseenter", onEnter);
+
+  document.removeEventListener("mouseleave", onLeave);
+  document.removeEventListener("mouseenter", onEnter);
+
     const onOver = (e) => {
       const t = e.target;
       if (t?.matches?.('a, button, input, [data-hover="true"]')) setIsHovering(true);
@@ -99,7 +108,7 @@ export default function NeonCursor() {
         animate={{
           ...trailXY,
           scale: isHovering ? 1.5 : 1,
-          borderColor: isHovering ? "rgb(255, 255, 255)" : "rgb(255, 255, 255)",
+          borderColor: isHovering ? "rgb(255, 255, 255)" : "rgb(0, 0, 0)",
           borderWidth: isHovering ? "3px" : "2px",
         }}
         transition={{ type: "spring", damping: 30, stiffness: 200, mass: 0.8 }}

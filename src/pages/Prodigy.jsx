@@ -82,24 +82,6 @@ export default function Prodigy() {
         </div>
       </section>
 
-      {/* Accomplishments */}
-      <section className="project-section">
-        <h2>Accomplishments We’re Proud Of</h2>
-        <p>
-          We’re proud to have developed an almost fully functioning interface demonstrating our core vision: 
-          a unified, team-friendly management system.
-        </p>
-      </section>
-
-      {/* What We Learned */}
-      <section className="project-section">
-        <h2>What We Learned</h2>
-        <p>
-          Learned how to connect React.js and Flask seamlessly using Axios for real-time communication. 
-          Improved our understanding of UI/UX design principles and scalable front-end components.
-        </p>
-      </section>
-
       {/* Tech Stack as Pills */}
       <section className="project-section">
         <h2>Built With</h2>
