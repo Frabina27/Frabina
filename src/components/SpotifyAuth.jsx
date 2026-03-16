@@ -1,185 +1,118 @@
-import React, { useState, useEffect, useRef } from "react";
-import { getAuthorizationUrl, getAccessToken, getRecentlyPlayed } from "./SpotifyAuth";
+// SpotifyAuth.js - Handles Spotify PKCE authentication
 
-const MusicPlayer = () => {
-  const playerRef = useRef(null);
-  const [lastTrack, setLastTrack] = useState(null);
-  const [accessToken, setAccessToken] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+const CLIENT_ID = "b08ee93b36e04a15ba7d3f3cc32e6d6e";
+const REDIRECT_URI = "https://www.frabina.com/";
 
-// Check for authorization code or token in URL
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('code');
-    const token = params.get('token');
 
-    if (token) {
-      // Token already in URL, use it
-      console.log('Using token from URL');
-      setAccessToken(token);
-    } else if (code) {
-      // Exchange code for token and add to URL
-      console.log('Auth code found, exchanging...');
-      const exchange = async () => {
-        try {
-          setLoading(true);
-          const newToken = await getAccessToken(code);
-          if (newToken) {
-            setAccessToken(newToken);
-            // Add token to URL
-            window.history.replaceState({}, document.title, `?token=${newToken}`);
-          } else {
-            setError('Failed to get Spotify access token');
-          }
-        } catch (err) {
-          setError('Failed to authenticate with Spotify: ' + err.message);
-        } finally {
-          setLoading(false);
-        }
-      };
-      exchange();
-    }
-  }, []);
+// Generate random string for PKCE
+function generateRandomString(length) {
+  let text = '';
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  for (let i = 0; i < length; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+}
 
-  // Fetch last track
-  useEffect(() => {
-    if (!accessToken) return;
+// SHA256 hash for PKCE
+async function generateCodeChallenge(codeVerifier) {
+  const data = new TextEncoder().encode(codeVerifier);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashString = hashArray.map(b => String.fromCharCode(b)).join('');
+  return btoa(hashString).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+}
 
-    const fetchLastTrack = async () => {
-      try {
-        console.log('Fetching recently played...');
-        const recently = await getRecentlyPlayed(accessToken, 1);
-        console.log('Recently played response:', recently);
-        
-        if (recently && recently.items && recently.items.length > 0) {
-          const track = recently.items[0].track;
-          console.log('Setting track:', track.name);
-          setLastTrack({
-            name: track.name,
-            artist: track.artists.map(a => a.name).join(', '),
-            image: track.album.images[0]?.url,
-          });
-        } else {
-          console.log('No items in recently played');
-          setError('No recently played tracks found');
-        }
-      } catch (err) {
-        console.error('Error fetching track:', err);
-        setError('Error loading track: ' + err.message);
-      }
-    };
+// Get authorization URL
+export async function getAuthorizationUrl() {
+  const codeVerifier = generateRandomString(128);
+  const codeChallenge = await generateCodeChallenge(codeVerifier);
 
-    fetchLastTrack();
-    const interval = setInterval(fetchLastTrack, 30000);
-    return () => clearInterval(interval);
-  }, [accessToken]);
+  // Store verifier in session storage
+  sessionStorage.setItem('spotify_code_verifier', codeVerifier);
 
-  // Handle logout
-  const handleLogout = () => {
-    setAccessToken(null);
-    setLastTrack(null);
-    setError(null);
-  };
+  const scope = 'user-read-currently-playing user-read-playback-state user-read-private user-read-email user-read-recently-played';
+  const authUrl = new URL('https://accounts.spotify.com/authorize');
 
-  // Handle Spotify login
-  const handleSpotifyLogin = async () => {
-    try {
-      const authUrl = await getAuthorizationUrl();
-      window.location.href = authUrl;
-    } catch (err) {
-      setError('Failed to start authentication: ' + err.message);
-    }
-  };
+  authUrl.searchParams.append('client_id', CLIENT_ID);
+  authUrl.searchParams.append('response_type', 'code');
+  authUrl.searchParams.append('redirect_uri', REDIRECT_URI);
+  authUrl.searchParams.append('scope', scope);
+  authUrl.searchParams.append('code_challenge_method', 'S256');
+  authUrl.searchParams.append('code_challenge', codeChallenge);
 
-  // If not authenticated, show login button
-  if (!accessToken) {
-    return (
-      <div
-        ref={playerRef}
-        className="music-player"
-      >
-        <div className="music-bar">
-          <div style={{ textAlign: 'center', padding: '16px 12px' }}>
-            <button
-              onClick={handleSpotifyLogin}
-              disabled={loading}
-              style={{
-                background: 'linear-gradient(135deg, #1DB954, #1ed760)',
-                border: 'none',
-                color: 'white',
-                padding: '10px 16px',
-                borderRadius: '20px',
-                fontSize: '12px',
-                fontWeight: 600,
-                cursor: loading ? 'not-allowed' : 'pointer',
-                width: '100%',
-                opacity: loading ? 0.7 : 1,
-                transition: 'all 0.2s ease',
-              }}
-            >
-              {loading ? 'Loading...' : 'Connect Spotify'}
-            </button>
-            {error && (
-              <p style={{ fontSize: '11px', color: '#ff6b6b', marginTop: '8px' }}>
-                {error}
-              </p>
-            )}
-          </div>
-        </div>
-      </div>
-    );
+  return authUrl.toString();
+}
+
+// Exchange code for access token
+export async function getAccessToken(code) {
+  const codeVerifier = sessionStorage.getItem('spotify_code_verifier');
+
+  const response = await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      client_id: CLIENT_ID,
+      grant_type: 'authorization_code',
+      code: code,
+      redirect_uri: REDIRECT_URI,
+      code_verifier: codeVerifier,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to get access token');
   }
 
-  // If no track, show loading
-  if (!lastTrack) {
-    return (
-      <div
-        ref={playerRef}
-        className="music-player"
-      >
-        <div className="music-bar">
-          <div style={{ textAlign: 'center', padding: '16px 12px' }}>
-            <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>
-              Loading...
-            </p>
-          </div>
-        </div>
-      </div>
-    );
+  const data = await response.json();
+  return data.access_token;
+}
+
+// Get currently playing track
+export async function getCurrentlyPlaying(accessToken) {
+  const response = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    return null;
   }
 
-  // Show last track
-  return (
-    <div
-      ref={playerRef}
-      className="music-player"
-    >
-      <div className="music-bar">
-        <div className="music-bar-info">
-          <div className="music-bar-cover">
-            {lastTrack.image ? (
-              <img src={lastTrack.image} alt={lastTrack.name} />
-            ) : (
-              <span className="music-note-icon">♪</span>
-            )}
-          </div>
-          <div className="music-bar-text">
-            <div className="music-bar-title">{lastTrack.name}</div>
-            <div className="music-bar-artist">{lastTrack.artist}</div>
-          </div>
-        </div>
-        <button
-          className="music-ctrl"
-          onClick={handleLogout}
-          title="Disconnect Spotify"
-          style={{ margin: '0 12px' }}
-        >
-          ✕
-        </button>
-      </div>
-    </div>
-  );
-};
+  return await response.json();
+}
 
-export default MusicPlayer;
+// Get recently played tracks
+export async function getRecentlyPlayed(accessToken, limit = 1) {
+  const response = await fetch(`https://api.spotify.com/v1/me/player/recently-played?limit=${limit}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  return await response.json();
+}
+
+// Get user profile
+export async function getUserProfile(accessToken) {
+  const response = await fetch('https://api.spotify.com/v1/me', {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  return await response.json();
+}
+
+export { CLIENT_ID, REDIRECT_URI };
