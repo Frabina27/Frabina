@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from "react-route
 import { AnimatePresence, motion } from "framer-motion";
 import Navbar from "./components/Navbar";
 import NeonCursor from "./components/NeonCursor";
+import TotoroStickers from "./components/TotoroStickers";
 
 import Home from "./pages/Home";
 
@@ -60,6 +61,7 @@ export default function App() {
   return (
     <Router>
       <NeonCursor />
+      <TotoroStickers />
       <div className="background"></div>
       <Navbar />
       <div className="app-content">

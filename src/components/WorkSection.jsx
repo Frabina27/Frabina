@@ -171,8 +171,8 @@ export default function WorkSection() {
     <section id="projects" className="work-section">
       {/* Heading */}
       <div className="work-section-header">
-        <h1>Work</h1>
-        <p className="small">Projects & designs — all in one place.</p>
+        <h1>Projects</h1>
+        <p className="small">Projects & designs - all in one place!</p>
       </div>
 
       {/* Filter pills */}

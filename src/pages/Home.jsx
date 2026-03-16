@@ -100,6 +100,22 @@ export default function Home() {
       {/* ===== WORK SECTION (Projects + Designs) ===== */}
       <WorkSection />
 
+
+      <footer className="footer">
+        <p className="footer-name">♡ Frabina Edwin</p>
+        <p className="footer-copy">© 2026 All rights reserved</p>
+        <a href="https://frabina.com" target="_blank" rel="noopener noreferrer" className="footer-link">
+          frabina.com
+        </a>
+        <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "12px" }}>
+          <a href="https://cs.utdring.com/#https://frabina.com/?nav=prev" style={{ color: "white", textDecoration: "underline overline #FFFFFF", fontSize: "14px" }}>←</a>
+          <a href="https://cs.utdring.com/#https://frabina.com/" target="_blank" rel="noopener noreferrer">
+            <img src="https://cs.utdring.com/icon.white.svg" alt="CS Webring" style={{ width: "18px", height: "auto", opacity: 0.8, display: "block" }} />
+          </a>
+          <a href="https://cs.utdring.com/#https://frabina.com/?nav=next" style={{ color: "white", textDecoration: "underline overline #FFFFFF", fontSize: "14px" }}>→</a>
+        </div>
+      </footer>
+
     </div>
   );
 }
