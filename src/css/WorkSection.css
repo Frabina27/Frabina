@@ -1,0 +1,183 @@
+/* ===================================================
+   WORK SECTION — Projects & Designs combined
+=================================================== */
+
+.work-section {
+  padding: 60px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.work-section-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.work-section-header h1 {
+  font-size: 36px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.work-section-header .small {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 14px;
+}
+
+/* ===== FILTER PILLS ===== */
+.work-filters {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.work-filter-pill {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.03em;
+  backdrop-filter: blur(8px);
+}
+
+.work-filter-pill:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.work-filter-pill.active {
+  background: rgba(255, 255, 255, 0.85);
+  color: #25344F;
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+/* ===== GRID ===== */
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 1024px) {
+  .work-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .work-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .work-section {
+    padding: 40px 20px;
+  }
+}
+
+/* ===== CARD ===== */
+.work-card {
+  background: #86a6c9;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-decoration: none;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 4px 20px rgba(155, 135, 212, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.work-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 16px 40px rgba(155, 135, 212, 0.18);
+}
+
+/* ===== CARD HEADER ===== */
+.work-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.work-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.work-card-titles {
+  flex: 1;
+  min-width: 0;
+}
+
+.work-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 3px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.work-card-subtitle {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: "Courier New", monospace;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===== TYPE BADGE ===== */
+.work-card-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+
+/* ===== DESCRIPTION ===== */
+.work-card-description {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.65;
+  margin: 0;
+  flex: 1;
+}
+
+/* ===== TECH TAGS ===== */
+.work-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: auto;
+}
+
+.work-card-tag {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  padding: 3px 10px;
+  background: rgba(255, 255, 255, 0.08);
+}

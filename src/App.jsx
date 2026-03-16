@@ -5,9 +5,6 @@ import Navbar from "./components/Navbar";
 import NeonCursor from "./components/NeonCursor";
 
 import Home from "./pages/Home";
-import Projects from "./pages/Projects";
-import Designs from "./pages/Designs";
-import Resume from "./pages/Resume";
 
 import Eunoia from "./pages/Eunoia";
 import MeteorMate from "./pages/MeteorMates";
@@ -38,24 +35,20 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes key={location.pathname} location={location}>
-        {}
+        {/* Main pages */}
         <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
-        <Route path="/projects" element={<PageWrapper><Projects /></PageWrapper>} />
-        <Route path="/designs" element={<PageWrapper><Designs /></PageWrapper>} />
-        <Route path="/resume" element={<PageWrapper><Resume /></PageWrapper>} />
 
-        {}
+        {/* Design detail pages */}
         <Route path="/projects/eunoia" element={<PageWrapper><Eunoia /></PageWrapper>} />
         <Route path="/projects/meteormate" element={<PageWrapper><MeteorMate /></PageWrapper>} />
         <Route path="/projects/acmarchives" element={<PageWrapper><ACMArchives /></PageWrapper>} />
         <Route path="/projects/gdsc" element={<PageWrapper><GDSC /></PageWrapper>} />
         <Route path="/projects/valorant" element={<PageWrapper><Valorant /></PageWrapper>} />
 
-        {}
+        {/* Dev project detail pages */}
         <Route path="/projects/prodigy" element={<PageWrapper><Prodigy /></PageWrapper>} />
         <Route path="/projects/weather" element={<PageWrapper><Weather /></PageWrapper>} />
         <Route path="/projects/voice" element={<PageWrapper><Voice /></PageWrapper>} />
-        {}
         <Route path="/projects/pomodoro" element={<PageWrapper><Pomodoro /></PageWrapper>} />
         <Route path="/projects/galaga" element={<PageWrapper><Galaga /></PageWrapper>} />
       </Routes>
@@ -67,14 +60,9 @@ export default function App() {
   return (
     <Router>
       <NeonCursor />
-      {}
       <div className="background"></div>
-
-      {}
       <Navbar />
-
-      {}
-      <div className="container app-content">
+      <div className="app-content">
         <AnimatedRoutes />
       </div>
     </Router>

@@ -13,17 +13,15 @@
 
 .resume-header h1 {
   font-size: 3rem;
-  font-weight: 800;
-  margin-bottom: 12px;
-  color: var(--text);
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #ffffff;
 }
 
 .resume-header .small {
-  font-size: 1.1rem;
-  opacity: 0.7;
-  color: var(--text);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.65);
 }
-
 
 /* === SECTION DIVIDERS === */
 .section-divider {
@@ -34,7 +32,7 @@
 .section-divider h2 {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--text-se);
+  color: #ffffff;
   position: relative;
   display: inline-block;
   padding: 0 20px;
@@ -47,7 +45,7 @@
   top: 50%;
   width: 60px;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent-purple));
+  background: linear-gradient(90deg, transparent, rgba(155, 135, 212, 0.5));
 }
 
 .section-divider h2::before {
@@ -58,7 +56,7 @@
 .section-divider h2::after {
   left: 100%;
   margin-left: 20px;
-  background: linear-gradient(90deg, var(--accent-purple), transparent);
+  background: linear-gradient(90deg, rgba(155, 135, 212, 0.5), transparent);
 }
 
 /* === TIMELINE === */
@@ -74,10 +72,10 @@
   top: 0;
   bottom: 0;
   width: 3px;
-  background: linear-gradient(180deg, 
-    var(--text) 0%, 
-    var(--experimenting-blue) 50%, 
-    var(--text) 100%
+  background: linear-gradient(180deg,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(155, 135, 212, 0.6) 50%,
+    rgba(255, 255, 255, 0.8) 100%
   );
 }
 
@@ -96,25 +94,22 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: var(--text);
+  background: #ffffff;
   border: 3px solid white;
   box-shadow: 0 0 0 3px rgba(155, 135, 212, 0.2);
   z-index: 1;
 }
 
-
 /* === TIMELINE CARDS === */
 .timeline-card {
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
+  background: #86a6c9;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 24px;
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  padding: 24px;
-  box-shadow: 
-    0 4px 20px rgba(155, 135, 212, 0.08),
-    0 1px 3px rgba(45, 40, 56, 0.05);
-  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(155, 135, 212, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   position: relative;
   overflow: hidden;
 }
@@ -126,16 +121,15 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--experimenting-blue), var(--text));
+  background: linear-gradient(90deg, rgba(37, 52, 79, 0.8), rgba(255, 255, 255, 0.6));
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
 .timeline-card:hover {
-  transform: translateX(8px);
-  box-shadow: 
-    0 12px 40px rgba(155, 135, 212, 0.15),
-    0 4px 12px rgba(45, 40, 56, 0.08);
+  transform: translateY(-6px);
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 16px 40px rgba(155, 135, 212, 0.18);
 }
 
 .timeline-card:hover::before {
@@ -156,28 +150,29 @@
 }
 
 .timeline-title h3 {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 700;
   margin-bottom: 4px;
-  color: var(--text-secondary); /*this is the text for resume header in catagories (like utd)*/
+  color: #ffffff;
 }
 
 .timeline-subtitle {
-  font-size: 0.95rem;
-  color: var(--experimenting-blue);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: "Courier New", monospace;
   font-weight: 600;
   margin-bottom: 12px;
 }
 
 .timeline-date {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
   font-weight: 600;
   white-space: nowrap;
-  background: rgba(155, 135, 212, 0.1);
-  padding: 6px 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(155, 135, 212, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 /* === TIMELINE CONTENT === */
@@ -191,43 +186,26 @@
   margin: 0;
   padding-left: 16px;
   position: relative;
-  line-height: 1.6;
-  color: var(--text-secondary);
+  line-height: 1.65;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .timeline-content p::before {
-  content: '•';
+  content: '\2022';
   position: absolute;
   left: 0;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.85);
   font-weight: bold;
 }
 
 /* === RESPONSIVE === */
 @media (max-width: 768px) {
-  .timeline {
-    padding-left: 30px;
-  }
-
-  .timeline-item::before {
-    left: -37px;
-  }
-
-  .timeline-header {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .timeline-date {
-    align-self: flex-start;
-  }
-
-  .resume-header h1 {
-    font-size: 2.2rem;
-  }
-
+  .timeline { padding-left: 30px; }
+  .timeline-item::before { left: -37px; }
+  .timeline-header { flex-direction: column; gap: 8px; }
+  .timeline-date { align-self: flex-start; }
+  .resume-header h1 { font-size: 2.2rem; }
   .section-divider h2::before,
-  .section-divider h2::after {
-    width: 30px;
-  }
+  .section-divider h2::after { width: 30px; }
 }
