@@ -1,219 +1,275 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { getAuthorizationUrl, getAccessToken, getCurrentlyPlaying, getRecentlyPlayed } from "./SpotifyAuth";
 
-// ─── ADD YOUR SONGS HERE ───────────────────────────────────────────────────
-const SONGS = [
-  {
-    id: 1,
-    title: "Song Title",
-    artist: "Artist Name",
-    src: "/music/song1.mp3",   // path relative to /public
-    cover: null,               // or "/covers/song1.jpg"
-  },
-  {
-    id: 2,
-    title: "Song Title",
-    artist: "Artist Name",
-    src: "/music/song2.mp3",
-    cover: null,
-  },
-  {
-    id: 3,
-    title: "Song Title",
-    artist: "Artist Name",
-    src: "/music/song3.mp3",
-    cover: null,
-  },
-];
-// ──────────────────────────────────────────────────────────────────────────
+const MusicPlayer = () => {
+  const playerRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTrack, setCurrentTrack] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-const fmt = (s) => {
-  if (!s || isNaN(s)) return "0:00";
-  const m = Math.floor(s / 60);
-  const sec = Math.floor(s % 60);
-  return `${m}:${sec.toString().padStart(2, "0")}`;
-};
-
-export default function MusicPlayer() {
-  const audioRef        = useRef(null);
-  const isPlayingRef    = useRef(false);   // stale-closure-safe ref
-  const progressBarRef  = useRef(null);
-
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPlaying,    setIsPlaying]    = useState(false);
-  const [progress,     setProgress]     = useState(0);
-  const [currentTime,  setCurrentTime]  = useState(0);
-  const [duration,     setDuration]     = useState(0);
-  const [expanded,     setExpanded]     = useState(false);
-  const [volume,       setVolume]       = useState(0.8);
-
-  const song = SONGS[currentIndex];
-
-  // Keep ref in sync so the visibility handler never reads stale state
-  useEffect(() => { isPlayingRef.current = isPlaying; }, [isPlaying]);
-
-  // ── Tab visibility: pause on hide, resume on show ──
-  useEffect(() => {
-    const handle = () => {
-      if (!audioRef.current) return;
-      if (document.hidden) {
-        audioRef.current.pause();
-      } else if (isPlayingRef.current) {
-        audioRef.current.play().catch(() => {});
+  // Exchange auth code for access token
+  const exchangeCode = async (code) => {
+    try {
+      console.log('Starting token exchange for code:', code);
+      setLoading(true);
+      const token = await getAccessToken(code);
+      console.log('Successfully got token:', token ? 'yes' : 'no');
+      if (token) {
+        localStorage.setItem('spotify_access_token', token);
+        setAccessToken(token);
+        console.log('Token saved to localStorage');
+      } else {
+        console.error('No token returned from getAccessToken');
+        setError('No token received from Spotify');
       }
-    };
-    document.addEventListener("visibilitychange", handle);
-    return () => document.removeEventListener("visibilitychange", handle);
+    } catch (err) {
+      console.error('Exchange error:', err);
+      setError('Failed to authenticate with Spotify: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Check for authorization code in URL
+  useEffect(() => {
+    console.log('Checking for auth code in URL');
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    console.log('Code found:', code ? 'yes' : 'no');
+
+    if (code) {
+      console.log('Exchanging code...');
+      exchangeCode(code);
+    } else {
+      console.log('No code, checking localStorage');
+      const storedToken = localStorage.getItem('spotify_access_token');
+      console.log('Stored token found:', storedToken ? 'yes' : 'no');
+      if (storedToken) {
+        console.log('Setting token from localStorage');
+        setAccessToken(storedToken);
+      }
+    }
   }, []);
 
-  // ── Load new track whenever index changes ──
+  // Fetch currently playing or recently played track
   useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.src  = song.src;
-    audio.load();
-    if (isPlayingRef.current) {
-      audio.play().catch(() => {});
+    if (!accessToken) return;
+
+    const fetchTrack = async () => {
+      try {
+        console.log('Fetching current track...');
+        let track = await getCurrentlyPlaying(accessToken);
+        
+        if (!track || !track.item) {
+          console.log('No current track, fetching recently played...');
+          const recently = await getRecentlyPlayed(accessToken, 1);
+          if (recently && recently.track) {
+            track = { item: recently.track, is_playing: false };
+          }
+        }
+
+        if (track && track.item) {
+          console.log('Found track:', track.item.name);
+          setCurrentTrack({
+            name: track.item.name,
+            artist: track.item.artists.map(a => a.name).join(', '),
+            album: track.item.album.name,
+            image: track.item.album.images[0]?.url,
+            duration: track.item.duration_ms / 1000,
+            url: track.item.external_urls.spotify,
+          });
+          setIsPlaying(track.is_playing || false);
+        } else {
+          console.log('No track data available');
+        }
+      } catch (err) {
+        console.error('Error fetching track:', err);
+      }
+    };
+
+    fetchTrack();
+    const interval = setInterval(fetchTrack, 5000);
+    return () => clearInterval(interval);
+  }, [accessToken]);
+
+  // Handle Spotify login
+  const handleSpotifyLogin = async () => {
+    try {
+      console.log('Starting Spotify login...');
+      const authUrl = await getAuthorizationUrl();
+      console.log('Redirecting to:', authUrl);
+      window.location.href = authUrl;
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('Failed to start authentication: ' + err.message);
     }
-  }, [currentIndex]); // eslint-disable-line
+  };
 
-  // ── Sync volume ──
+  // Handle logout
+  const handleLogout = () => {
+    localStorage.removeItem('spotify_access_token');
+    setAccessToken(null);
+    setCurrentTrack(null);
+    setError(null);
+  };
+
+  // Dragging functionality
+  const handleMouseDown = (e) => {
+    if (e.button === 0) {
+      setIsDragging(true);
+      const rect = playerRef.current.getBoundingClientRect();
+      setDragOffset({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      });
+    }
+  };
+
   useEffect(() => {
-    if (audioRef.current) audioRef.current.volume = volume;
-  }, [volume]);
+    const handleMouseMove = (e) => {
+      if (!isDragging || !playerRef.current) return;
 
-  // ── Controls ──
-  const togglePlay = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    if (isPlaying) { audio.pause(); setIsPlaying(false); }
-    else           { audio.play().catch(() => {}); setIsPlaying(true); }
-  };
+      const newRight = window.innerWidth - e.clientX + dragOffset.x;
+      const newBottom = window.innerHeight - e.clientY + dragOffset.y;
 
-  const prev = () => setCurrentIndex(i => (i - 1 + SONGS.length) % SONGS.length);
-  const next = () => setCurrentIndex(i => (i + 1) % SONGS.length);
+      playerRef.current.style.right = Math.max(0, newRight) + "px";
+      playerRef.current.style.bottom = Math.max(0, newBottom) + "px";
+      playerRef.current.style.left = "auto";
+      playerRef.current.style.top = "auto";
+    };
 
-  const selectSong = (index) => {
-    setCurrentIndex(index);
-    setIsPlaying(true);
-    // play() triggered by the useEffect above
-  };
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
 
-  const handleSeek = (e) => {
-    const audio = audioRef.current;
-    if (!audio || !progressBarRef.current) return;
-    const rect = progressBarRef.current.getBoundingClientRect();
-    const pct  = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
-    audio.currentTime = pct * audio.duration;
-  };
+    if (isDragging) {
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+      return () => {
+        document.removeEventListener("mousemove", handleMouseMove);
+        document.removeEventListener("mouseup", handleMouseUp);
+      };
+    }
+  }, [isDragging, dragOffset]);
 
-  // ── Audio events ──
-  const onTimeUpdate = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    setCurrentTime(audio.currentTime);
-    setProgress((audio.currentTime / audio.duration) * 100 || 0);
-  };
-
-  const onLoadedMetadata = () => setDuration(audioRef.current?.duration || 0);
-  const onEnded          = () => next();
-
-  return (
-    <>
-      {/* Hidden audio element */}
-      <audio
-        ref={audioRef}
-        onTimeUpdate={onTimeUpdate}
-        onLoadedMetadata={onLoadedMetadata}
-        onEnded={onEnded}
-      />
-
-      {/* ── Player shell ── */}
-      <div className={`music-player ${expanded ? "music-player--open" : ""}`}>
-
-        {/* ── Song list (expandable) ── */}
-        {expanded && (
-          <div className="music-song-list">
-            <p className="music-list-heading">Favorite Songs</p>
-            {SONGS.map((s, i) => (
-              <div
-                key={s.id}
-                className={`music-song-item ${i === currentIndex ? "music-song-item--active" : ""}`}
-                onClick={() => selectSong(i)}
-              >
-                <div className="music-song-item-cover">
-                  {s.cover
-                    ? <img src={s.cover} alt={s.title} />
-                    : <span className="music-note-icon">♪</span>
-                  }
-                </div>
-                <div className="music-song-item-text">
-                  <span className="music-song-item-title">{s.title}</span>
-                  <span className="music-song-item-artist">{s.artist}</span>
-                </div>
-                {i === currentIndex && (
-                  <span className="music-playing-dot" data-playing={isPlaying} />
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* ── Now playing bar ── */}
+  // If not authenticated, show login button
+  if (!accessToken) {
+    return (
+      <div
+        ref={playerRef}
+        className="music-player"
+        onMouseDown={handleMouseDown}
+      >
         <div className="music-bar">
-
-          {/* Song info — clicking expands the list */}
-          <div className="music-bar-info" onClick={() => setExpanded(e => !e)} title="Show song list">
-            <div className="music-bar-cover">
-              {song.cover
-                ? <img src={song.cover} alt={song.title} />
-                : <span className="music-note-icon">♪</span>
-              }
-            </div>
-            <div className="music-bar-text">
-              <span className="music-bar-title">{song.title}</span>
-              <span className="music-bar-artist">{song.artist}</span>
-            </div>
-            <span className="music-bar-chevron">{expanded ? "▾" : "▴"}</span>
-          </div>
-
-          {/* Transport controls */}
-          <div className="music-controls">
-            <button className="music-ctrl" onClick={prev} title="Previous">⏮</button>
-            <button className="music-ctrl music-ctrl--play" onClick={togglePlay} title={isPlaying ? "Pause" : "Play"}>
-              {isPlaying ? "⏸" : "▶"}
-            </button>
-            <button className="music-ctrl" onClick={next} title="Next">⏭</button>
-          </div>
-
-          {/* Progress + time */}
-          <div className="music-progress-wrap">
-            <span className="music-time">{fmt(currentTime)}</span>
-            <div
-              className="music-progress"
-              ref={progressBarRef}
-              onClick={handleSeek}
-              title="Seek"
+          <div style={{ textAlign: 'center', padding: '12px' }}>
+            <p style={{ fontSize: '12px', marginBottom: '12px', color: 'rgba(255,255,255,0.8)' }}>
+              Connect Spotify
+            </p>
+            <button
+              onClick={handleSpotifyLogin}
+              disabled={loading}
+              style={{
+                background: 'linear-gradient(135deg, #1DB954, #1ed760)',
+                border: 'none',
+                color: 'white',
+                padding: '8px 16px',
+                borderRadius: '20px',
+                fontSize: '12px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                width: '100%',
+              }}
             >
-              <div className="music-progress-fill" style={{ width: `${progress}%` }} />
-              <div className="music-progress-thumb" style={{ left: `${progress}%` }} />
-            </div>
-            <span className="music-time">{fmt(duration)}</span>
-          </div>
-
-          {/* Volume */}
-          <div className="music-volume">
-            <span className="music-vol-icon">{volume === 0 ? "🔇" : volume < 0.5 ? "🔉" : "🔊"}</span>
-            <input
-              type="range"
-              min="0" max="1" step="0.05"
-              value={volume}
-              onChange={e => setVolume(parseFloat(e.target.value))}
-              className="music-vol-slider"
-              title="Volume"
-            />
+              {loading ? 'Loading...' : 'Login with Spotify'}
+            </button>
+            {error && (
+              <p style={{ fontSize: '10px', color: '#ff6b6b', marginTop: '8px' }}>
+                {error}
+              </p>
+            )}
           </div>
         </div>
       </div>
-    </>
+    );
+  }
+
+  // If authenticated but no track, show loading
+  if (!currentTrack) {
+    return (
+      <div
+        ref={playerRef}
+        className="music-player"
+        onMouseDown={handleMouseDown}
+      >
+        <div className="music-bar">
+          <div style={{ textAlign: 'center', padding: '12px' }}>
+            <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>
+              Loading track...
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      ref={playerRef}
+      className={`music-player ${isOpen ? "music-player--open" : ""}`}
+      onMouseDown={handleMouseDown}
+    >
+      {/* Now Playing Bar */}
+      <div className="music-bar">
+        {/* Song Info */}
+        <div className="music-bar-info" onClick={() => setIsOpen(!isOpen)}>
+          <div className="music-bar-cover">
+            {currentTrack.image ? (
+              <img src={currentTrack.image} alt={currentTrack.name} />
+            ) : (
+              <span className="music-note-icon">♪</span>
+            )}
+          </div>
+          <div className="music-bar-text">
+            <div className="music-bar-title">{currentTrack.name}</div>
+            <div className="music-bar-artist">{currentTrack.artist}</div>
+          </div>
+          <div className="music-bar-chevron">›</div>
+        </div>
+
+        {/* Controls */}
+        <div className="music-controls">
+          <a
+            href={currentTrack.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="music-ctrl"
+            title="Open in Spotify"
+          >
+            🎵
+          </a>
+          <button
+            className="music-ctrl music-ctrl--play"
+            onClick={() => setIsPlaying(!isPlaying)}
+            title={isPlaying ? "Playing on Spotify" : "Paused"}
+          >
+            {isPlaying ? "⏸" : "▶"}
+          </button>
+          <button
+            className="music-ctrl"
+            onClick={handleLogout}
+            title="Disconnect Spotify"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+    </div>
   );
-}
+};
+
+export default MusicPlayer;

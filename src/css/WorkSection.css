@@ -84,7 +84,7 @@
 
 /* ===== CARD ===== */
 .work-card {
-  background: #86a6c9;
+  background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 20px;
   padding: 22px;

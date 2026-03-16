@@ -159,7 +159,7 @@ function WorkCard({ item }) {
   );
 }
 
-// ── Main section ──────────────────────────────────────────────────────────────
+// ── Main section
 export default function WorkSection() {
   const [active, setActive] = useState("all");
 

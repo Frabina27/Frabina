@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Navbar from "./components/Navbar";
 import NeonCursor from "./components/NeonCursor";
 import TotoroStickers from "./components/TotoroStickers";
+import MusicPlayer from "./components/MusicPlayer";
 
 import Home from "./pages/Home";
 
@@ -18,6 +19,7 @@ import Weather from "./pages/Weather";
 import Voice from "./pages/Voice";
 import Pomodoro from "./pages/Pomodoro";
 import Galaga from "./pages/Galaga";
+import Callback from "./pages/Callback";
 
 const PageWrapper = ({ children }) => (
   <motion.div
@@ -38,6 +40,8 @@ function AnimatedRoutes() {
       <Routes key={location.pathname} location={location}>
         {/* Main pages */}
         <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
+
+        {/* Spotify callback */}
 
         {/* Design detail pages */}
         <Route path="/projects/eunoia" element={<PageWrapper><Eunoia /></PageWrapper>} />
@@ -67,6 +71,7 @@ export default function App() {
       <div className="app-content">
         <AnimatedRoutes />
       </div>
+      <MusicPlayer />
     </Router>
   );
 }
