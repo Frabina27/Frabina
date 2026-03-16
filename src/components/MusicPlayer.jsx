@@ -3,18 +3,20 @@ import { getAuthorizationUrl, getAccessToken, getCurrentlyPlaying, getRecentlyPl
 
 const MusicPlayer = () => {
   const playerRef = useRef(null);
+  const spotifyPlayerRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [volume, setVolume] = useState(100);
-  const [playingDeviceId, setPlayingDeviceId] = useState(null);
+  const [deviceId, setDeviceId] = useState(null);
   const [timeStamp, setTimeStamp] = useState(null);
   const [recentlyPlayed, setRecentlyPlayed] = useState([]);
+  const [currentPosition, setCurrentPosition] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [playerReady, setPlayerReady] = useState(false);
 
   // Exchange auth code for access token
   const exchangeCode = async (code) => {
@@ -44,6 +46,70 @@ const MusicPlayer = () => {
     }
   }, []);
 
+  // Load Spotify Web Playback SDK
+  useEffect(() => {
+    if (!accessToken) return;
+
+    // Load the SDK script
+    const script = document.createElement('script');
+    script.src = 'https://sdk.scdn.co/spotify-player.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      const player = new window.Spotify.Player({
+        name: 'Web Music Player',
+        getOAuthToken: cb => {
+          cb(accessToken);
+        },
+        volume: 0.5,
+      });
+
+      spotifyPlayerRef.current = player;
+
+      // Ready
+      player.addListener('player_state_changed', state => {
+        if (!state) return;
+        
+        setIsPlaying(!state.paused);
+        setCurrentPosition(state.position);
+        setDuration(state.duration);
+
+        if (state.current_track) {
+          const track = state.current_track.item;
+          setCurrentTrack({
+            name: track.name,
+            artist: track.artists.map(a => a.name).join(', '),
+            album: track.album.name,
+            image: track.album.images[0]?.url,
+            duration: track.duration_ms / 1000,
+            url: track.external_urls.spotify,
+            id: track.id,
+          });
+        }
+      });
+
+      player.addListener('ready', ({ device_id }) => {
+        console.log('Ready with Device ID', device_id);
+        setDeviceId(device_id);
+        setPlayerReady(true);
+      });
+
+      player.addListener('not_ready', ({ device_id }) => {
+        console.log('Device ID has gone offline', device_id);
+        setPlayerReady(false);
+      });
+
+      player.connect();
+    };
+
+    return () => {
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
+  }, [accessToken]);
+
   // Format time ago
   const formatTimeAgo = (dateString) => {
     const now = new Date();
@@ -60,64 +126,30 @@ const MusicPlayer = () => {
     return played.toLocaleDateString();
   };
 
-  // Fetch currently playing and recently played tracks
+  // Fetch recently played tracks for the list
   useEffect(() => {
     if (!accessToken) return;
 
-    const fetchTrack = async () => {
+    const fetchRecentlyPlayed = async () => {
       try {
-        // Get currently playing
-        let track = await getCurrentlyPlaying(accessToken);
-        
-        if (track && track.item) {
-          setCurrentTrack({
-            name: track.item.name,
-            artist: track.item.artists.map(a => a.name).join(', '),
-            album: track.item.album.name,
-            image: track.item.album.images[0]?.url,
-            duration: track.item.duration_ms / 1000,
-            url: track.item.external_urls.spotify,
-            id: track.item.id,
-            progressMs: track.progress_ms || 0,
-          });
-          setIsPlaying(track.is_playing || false);
-          setTimeStamp(new Date().toISOString());
-          setPlayingDeviceId(track.device?.id);
-        } else {
-          // Get recently played if nothing currently playing
-          const recently = await getRecentlyPlayed(accessToken, 5);
-          if (recently && recently.items && recently.items.length > 0) {
-            const firstTrack = recently.items[0];
-            setCurrentTrack({
-              name: firstTrack.track.name,
-              artist: firstTrack.track.artists.map(a => a.name).join(', '),
-              album: firstTrack.track.album.name,
-              image: firstTrack.track.album.images[0]?.url,
-              duration: firstTrack.track.duration_ms / 1000,
-              url: firstTrack.track.external_urls.spotify,
-              id: firstTrack.track.id,
-            });
-            setIsPlaying(false);
-            setTimeStamp(firstTrack.played_at);
-            
-            // Format recently played list
-            setRecentlyPlayed(recently.items.map(item => ({
-              id: item.track.id,
-              name: item.track.name,
-              artist: item.track.artists.map(a => a.name).join(', '),
-              image: item.track.album.images[0]?.url,
-              playedAt: item.played_at,
-              url: item.track.external_urls.spotify,
-            })));
-          }
+        const recently = await getRecentlyPlayed(accessToken, 5);
+        if (recently && recently.items && recently.items.length > 0) {
+          setRecentlyPlayed(recently.items.map(item => ({
+            id: item.track.id,
+            name: item.track.name,
+            artist: item.track.artists.map(a => a.name).join(', '),
+            image: item.track.album.images[0]?.url,
+            playedAt: item.played_at,
+            url: item.track.external_urls.spotify,
+          })));
         }
       } catch (err) {
-        console.error('Error fetching track:', err);
+        console.error('Error fetching recently played:', err);
       }
     };
 
-    fetchTrack();
-    const interval = setInterval(fetchTrack, 3000);
+    fetchRecentlyPlayed();
+    const interval = setInterval(fetchRecentlyPlayed, 30000);
     return () => clearInterval(interval);
   }, [accessToken]);
 
@@ -133,50 +165,17 @@ const MusicPlayer = () => {
 
   // Play/Pause control
   const handlePlayPause = async () => {
-    if (!accessToken || !playingDeviceId) return;
+    if (!spotifyPlayerRef.current) return;
 
-    try {
-      const endpoint = isPlaying 
-        ? 'https://api.spotify.com/v1/me/player/pause'
-        : 'https://api.spotify.com/v1/me/player/play';
-
-      const response = await fetch(endpoint, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          device_id: playingDeviceId,
-        }),
-      });
-
-      if (response.ok) {
-        setIsPlaying(!isPlaying);
-      } else {
-        setError('Unable to control playback. Make sure Spotify is open.');
-      }
-    } catch (err) {
-      setError('Playback error: ' + err.message);
-    }
+    spotifyPlayerRef.current.togglePlay();
   };
 
   // Volume control
-  const handleVolumeChange = async (newVolume) => {
-    if (!accessToken || !playingDeviceId) return;
+  const handleVolumeChange = (newVolume) => {
+    if (!spotifyPlayerRef.current) return;
 
     setVolume(newVolume);
-    
-    try {
-      await fetch(`https://api.spotify.com/v1/me/player/volume?volume_percent=${newVolume}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-        },
-      });
-    } catch (err) {
-      console.error('Volume control error:', err);
-    }
+    spotifyPlayerRef.current.setVolume(newVolume / 100);
   };
 
   // Handle logout
@@ -187,52 +186,12 @@ const MusicPlayer = () => {
     setRecentlyPlayed([]);
   };
 
-  // Dragging functionality
-  const handleMouseDown = (e) => {
-    if (e.button === 0) {
-      setIsDragging(true);
-      const rect = playerRef.current.getBoundingClientRect();
-      setDragOffset({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      });
-    }
-  };
-
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (!isDragging || !playerRef.current) return;
-
-      const newRight = window.innerWidth - e.clientX + dragOffset.x;
-      const newBottom = window.innerHeight - e.clientY + dragOffset.y;
-
-      playerRef.current.style.right = Math.max(0, newRight) + "px";
-      playerRef.current.style.bottom = Math.max(0, newBottom) + "px";
-      playerRef.current.style.left = "auto";
-      playerRef.current.style.top = "auto";
-    };
-
-    const handleMouseUp = () => {
-      setIsDragging(false);
-    };
-
-    if (isDragging) {
-      document.addEventListener("mousemove", handleMouseMove);
-      document.addEventListener("mouseup", handleMouseUp);
-      return () => {
-        document.removeEventListener("mousemove", handleMouseMove);
-        document.removeEventListener("mouseup", handleMouseUp);
-      };
-    }
-  }, [isDragging, dragOffset]);
-
   // If not authenticated, show login button
   if (!accessToken) {
     return (
       <div
         ref={playerRef}
         className="music-player"
-        onMouseDown={handleMouseDown}
       >
         <div className="music-bar">
           <div style={{ textAlign: 'center', padding: '16px 12px' }}>
@@ -269,18 +228,35 @@ const MusicPlayer = () => {
     );
   }
 
-  // If authenticated but no track, show loading
+  // If authenticated but player not ready, show loading
+  if (!playerReady) {
+    return (
+      <div
+        ref={playerRef}
+        className="music-player"
+      >
+        <div className="music-bar">
+          <div style={{ textAlign: 'center', padding: '16px 12px' }}>
+            <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>
+              🎵 Connecting player...
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // If no track loaded yet
   if (!currentTrack) {
     return (
       <div
         ref={playerRef}
         className="music-player"
-        onMouseDown={handleMouseDown}
       >
         <div className="music-bar">
           <div style={{ textAlign: 'center', padding: '16px 12px' }}>
             <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>
-              ⏳ Loading...
+              ▶️ Ready to play
             </p>
           </div>
         </div>
@@ -292,7 +268,6 @@ const MusicPlayer = () => {
     <div
       ref={playerRef}
       className={`music-player ${isOpen ? "music-player--open" : ""}`}
-      onMouseDown={handleMouseDown}
     >
       {/* Recently Played List */}
       {isOpen && recentlyPlayed.length > 0 && (
@@ -344,23 +319,38 @@ const MusicPlayer = () => {
           <div className="music-bar-chevron">{isOpen ? '›' : '‹'}</div>
         </div>
 
+        {/* Progress Bar */}
+        {duration > 0 && (
+          <div className="music-progress-wrap">
+            <div className="music-progress">
+              <div 
+                className="music-progress-fill" 
+                style={{ width: `${(currentPosition / duration) * 100}%` }}
+              />
+              <div 
+                className="music-progress-thumb" 
+                style={{ left: `${(currentPosition / duration) * 100}%` }}
+              />
+            </div>
+            <div className="music-time-display">
+              <span className="music-time">
+                {Math.floor(currentPosition / 1000 / 60)}:{String(Math.floor((currentPosition / 1000) % 60)).padStart(2, '0')}
+              </span>
+              <span className="music-time">
+                {Math.floor(duration / 1000 / 60)}:{String(Math.floor((duration / 1000) % 60)).padStart(2, '0')}
+              </span>
+            </div>
+          </div>
+        )}
+
         {/* Controls */}
         <div className="music-controls">
-          <a
-            href={currentTrack.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="music-ctrl"
-            title="Open in Spotify"
-          >
-            ↗
-          </a>
           <button
             className="music-ctrl music-ctrl--play"
             onClick={handlePlayPause}
-            disabled={!playingDeviceId}
-            title={playingDeviceId ? (isPlaying ? "Pause" : "Play") : "No active device"}
-            style={{ opacity: playingDeviceId ? 1 : 0.5 }}
+            disabled={!playerReady}
+            title={playerReady ? (isPlaying ? "Pause" : "Play") : "Player not ready"}
+            style={{ opacity: playerReady ? 1 : 0.5 }}
           >
             {isPlaying ? "⏸" : "▶"}
           </button>
@@ -383,8 +373,8 @@ const MusicPlayer = () => {
             value={volume}
             onChange={(e) => handleVolumeChange(parseInt(e.target.value))}
             className="music-vol-slider"
-            disabled={!playingDeviceId}
-            style={{ opacity: playingDeviceId ? 1 : 0.5 }}
+            disabled={!playerReady}
+            style={{ opacity: playerReady ? 1 : 0.5 }}
           />
           <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.5)', minWidth: '24px', textAlign: 'right' }}>
             {volume}%
@@ -397,9 +387,9 @@ const MusicPlayer = () => {
             {error}
           </div>
         )}
-        {!playingDeviceId && (
+        {!playerReady && (
           <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.5)', textAlign: 'center', padding: '4px' }}>
-            Open Spotify to control playback
+            Loading player...
           </div>
         )}
       </div>
