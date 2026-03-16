@@ -1,63 +1,75 @@
 import React, { useState, useEffect, useRef } from "react";
-import { getAuthorizationUrl, getAccessToken, getRecentlyPlayed } from "./SpotifyAuth";
+import { getAuthorizationUrl, getAccessToken, getRecentlyPlayed, refreshAccessToken } from "./SpotifyAuth";
 
 const MusicPlayer = () => {
   const playerRef = useRef(null);
   const [lastTrack, setLastTrack] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
+  const [refreshToken, setRefreshToken] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Exchange auth code for access token
-  const exchangeCode = async (code) => {
-    try {
-      setLoading(true);
-      const token = await getAccessToken(code);
-      if (token) {
-        // Store token
-        try {
-          await window.storage.set('spotify_token', token);
-          console.log('Token stored');
-        } catch (storageErr) {
-          console.error('Storage error:', storageErr);
-        }
-        setAccessToken(token);
-      } else {
-        setError('Failed to get Spotify access token');
-      }
-    } catch (err) {
-      setError('Failed to authenticate with Spotify: ' + err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Check for authorization code in URL and stored token
+// Check for authorization code or tokens in URL
   useEffect(() => {
-    const init = async () => {
-      const params = new URLSearchParams(window.location.search);
-      const code = params.get('code');
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const token = params.get('token');
+    const refresh = params.get('refresh');
 
-      if (code) {
-        console.log('Auth code found, exchanging...');
-        exchangeCode(code);
-        window.history.replaceState({}, document.title, window.location.pathname);
-      } else {
-        // Try to get stored token
+    if (token && refresh) {
+      // Tokens already in URL, use them
+      console.log('Using tokens from URL');
+      setAccessToken(token);
+      setRefreshToken(refresh);
+    } else if (code) {
+      // Exchange code for tokens and add to URL
+      console.log('Auth code found, exchanging...');
+      const exchange = async () => {
         try {
-          const stored = await window.storage.get('spotify_token');
-          if (stored && stored.value) {
-            console.log('Using stored token');
-            setAccessToken(stored.value);
+          setLoading(true);
+          const result = await getAccessToken(code);
+          if (result && result.accessToken && result.refreshToken) {
+            setAccessToken(result.accessToken);
+            setRefreshToken(result.refreshToken);
+            // Add tokens to URL
+            window.history.replaceState({}, document.title, `?token=${result.accessToken}&refresh=${result.refreshToken}`);
+          } else {
+            setError('Failed to get Spotify tokens');
           }
         } catch (err) {
-          console.log('No stored token found');
+          setError('Failed to authenticate with Spotify: ' + err.message);
+        } finally {
+          setLoading(false);
         }
-      }
-    };
-
-    init();
+      };
+      exchange();
+    }
   }, []);
+
+  // Refresh token when expired
+  useEffect(() => {
+    if (!refreshToken) return;
+
+    // Check if token needs refresh every 45 minutes
+    const interval = setInterval(async () => {
+      try {
+        console.log('Refreshing access token...');
+        const result = await refreshAccessToken(refreshToken);
+        if (result && result.accessToken) {
+          setAccessToken(result.accessToken);
+          // Update URL with new access token
+          window.history.replaceState({}, document.title, `?token=${result.accessToken}&refresh=${refreshToken}`);
+        }
+      } catch (err) {
+        console.error('Token refresh failed:', err);
+        setError('Session expired, please login again');
+        setAccessToken(null);
+        setRefreshToken(null);
+      }
+    }, 45 * 60 * 1000); // 45 minutes
+
+    return () => clearInterval(interval);
+  }, [refreshToken]);
 
   // Fetch last track
   useEffect(() => {
@@ -93,15 +105,12 @@ const MusicPlayer = () => {
   }, [accessToken]);
 
   // Handle logout
-  const handleLogout = async () => {
-    try {
-      await window.storage.delete('spotify_token');
-    } catch (err) {
-      console.error('Error deleting token:', err);
-    }
+  const handleLogout = () => {
     setAccessToken(null);
+    setRefreshToken(null);
     setLastTrack(null);
     setError(null);
+    window.history.replaceState({}, document.title, window.location.pathname);
   };
 
   // Handle Spotify login
