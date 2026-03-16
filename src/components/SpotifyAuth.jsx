@@ -31,7 +31,7 @@ export async function getAuthorizationUrl() {
   // Store verifier in session storage
   sessionStorage.setItem('spotify_code_verifier', codeVerifier);
 
-  const scope = 'user-read-currently-playing user-read-playback-state user-read-private user-read-email';
+  const scope = 'user-read-currently-playing user-read-playback-state user-read-private user-read-email user-read-recently-played';
   const authUrl = new URL('https://accounts.spotify.com/authorize');
 
   authUrl.searchParams.append('client_id', CLIENT_ID);
@@ -97,8 +97,7 @@ export async function getRecentlyPlayed(accessToken, limit = 1) {
     return null;
   }
 
-  const data = await response.json();
-  return data.items && data.items.length > 0 ? data.items[0] : null;
+  return await response.json();
 }
 
 // Get user profile
