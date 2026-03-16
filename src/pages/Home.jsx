@@ -108,11 +108,11 @@ export default function Home() {
           frabina.com
         </a>
         <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "12px" }}>
-          <a href="https://cs.utdring.com/#https://frabina.com/?nav=prev" style={{ color: "white", textDecoration: "underline overline #FFFFFF", fontSize: "14px" }}>←</a>
+          <a href="https://cs.utdring.com/#https://frabina.com/?nav=prev" style={{ color: "white", textDecoration: "none", opacity: 0.7, fontSize: "14px" }}>←</a>
           <a href="https://cs.utdring.com/#https://frabina.com/" target="_blank" rel="noopener noreferrer">
-            <img src="https://cs.utdring.com/icon.white.svg" alt="CS Webring" style={{ width: "18px", height: "auto", opacity: 0.8, display: "block" }} />
+            <img src="https://cs.utdring.com/icon.white.svg" alt="CS Webring" style={{ width: "30px", height: "auto", opacity: 0.7, display: "block" }} />
           </a>
-          <a href="https://cs.utdring.com/#https://frabina.com/?nav=next" style={{ color: "white", textDecoration: "underline overline #FFFFFF", fontSize: "14px" }}>→</a>
+          <a href="https://cs.utdring.com/#https://frabina.com/?nav=next" style={{ color: "white", textDecoration: "none", opacity: 0.7, fontSize: "14px" }}>→</a>
         </div>
       </footer>
 
