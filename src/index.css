@@ -22,17 +22,13 @@
 
 html, body, #root { height: 100%; margin: 0; padding: 0; }
 
-html {
-  scroll-behavior: smooth;
-  cursor: none;
-}
+
 
 body {
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   padding-top: 72px;
-  cursor: none;
 }
 
 /* ===== BACKGROUND ===== */
@@ -185,7 +181,6 @@ p {
   padding: 12px 24px;
   border-radius: 12px;
   font-weight: 600;
-  cursor: none;
   display: inline-block;
   text-decoration: none;
   transition: all 0.25s ease;
@@ -416,7 +411,6 @@ p {
   border: none;
   color: white;
   font-size: 28px;
-  cursor: none;
   opacity: 0.6;
   padding: 0 8px;
   transition: opacity 0.2s ease, transform 0.2s ease;
