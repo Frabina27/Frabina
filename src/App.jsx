@@ -1,22 +1,21 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+
 import Navbar from "./components/Navbar";
 import TotoroStickers from "./components/TotoroStickers";
 
-import Home from "./pages/Home";
-
-import Eunoia from "./pages/Eunoia";
-import MeteorMate from "./pages/MeteorMates";
-import ACMArchives from "./pages/ACMArchives";
-import GDSC from "./pages/GDSC";
-import Valorant from "./pages/Valorant";
-
-import Prodigy from "./pages/Prodigy";
-import Weather from "./pages/Weather";
-import Voice from "./pages/Voice";
-import Pomodoro from "./pages/Pomodoro";
-import Galaga from "./pages/Galaga";
+import Home from "./components/pages/Home";
+import Eunoia from "./components/pages/Eunoia";
+import MeteorMate from "./components/pages/MeteorMate";
+import ACMArchives from "./components/pages/ACMArchives";
+import GDSCWebsite from "./components/pages/GDSCWebsite";
+import ValorantCards from "./components/pages/ValorantCards";
 
 const PageWrapper = ({ children }) => (
   <motion.div
@@ -34,23 +33,60 @@ function AnimatedRoutes() {
 
   return (
     <AnimatePresence mode="wait">
-      <Routes key={location.pathname} location={location}>
-        {/* Main pages */}
-        <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
+      <Routes location={location} key={location.pathname}>
+        <Route
+          path="/"
+          element={
+            <PageWrapper>
+              <Home />
+            </PageWrapper>
+          }
+        />
 
-        {/* Design detail pages */}
-        <Route path="/projects/eunoia" element={<PageWrapper><Eunoia /></PageWrapper>} />
-        <Route path="/projects/meteormate" element={<PageWrapper><MeteorMate /></PageWrapper>} />
-        <Route path="/projects/acmarchives" element={<PageWrapper><ACMArchives /></PageWrapper>} />
-        <Route path="/projects/gdsc" element={<PageWrapper><GDSC /></PageWrapper>} />
-        <Route path="/projects/valorant" element={<PageWrapper><Valorant /></PageWrapper>} />
+        <Route
+          path="/projects/eunoia"
+          element={
+            <PageWrapper>
+              <Eunoia />
+            </PageWrapper>
+          }
+        />
 
-        {/* Dev project detail pages */}
-        <Route path="/projects/prodigy" element={<PageWrapper><Prodigy /></PageWrapper>} />
-        <Route path="/projects/weather" element={<PageWrapper><Weather /></PageWrapper>} />
-        <Route path="/projects/voice" element={<PageWrapper><Voice /></PageWrapper>} />
-        <Route path="/projects/pomodoro" element={<PageWrapper><Pomodoro /></PageWrapper>} />
-        <Route path="/projects/galaga" element={<PageWrapper><Galaga /></PageWrapper>} />
+        <Route
+          path="/projects/meteormate"
+          element={
+            <PageWrapper>
+              <MeteorMate />
+            </PageWrapper>
+          }
+        />
+
+        <Route
+          path="/projects/acmarchives"
+          element={
+            <PageWrapper>
+              <ACMArchives />
+            </PageWrapper>
+          }
+        />
+
+        <Route
+          path="/projects/gdsc"
+          element={
+            <PageWrapper>
+              <GDSCWebsite />
+            </PageWrapper>
+          }
+        />
+
+        <Route
+          path="/projects/valorant"
+          element={
+            <PageWrapper>
+              <ValorantCards />
+            </PageWrapper>
+          }
+        />
       </Routes>
     </AnimatePresence>
   );

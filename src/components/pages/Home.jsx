@@ -1,10 +1,9 @@
 import React from "react";
 import Typewriter from "typewriter-effect";
-import FrabinaPfp from "../images/FrabinaPfp.jpg";
-import Resume from "../components/Resume";
-import WorkSection from "../components/WorkSection";
-import "../css/WorkSection.css";
-
+import FrabinaPfp from "../../images/FrabinaPfp.jpg";
+import Resume from "../Resume";
+import WorkSection from "../WorkSection";
+import "../../css/WorkSection.css";
 export default function Home() {
   const quotes = [
     { text: "Be The Change You Wish To See In The World", author: "— Mahatma Gandhi" },
